@@ -14,7 +14,7 @@ export default function NavBar() {
     setOpen(open)
   }
   return (
-    <AppBar sx={{ bgcolor: 'red', padding: 1 }}>
+    <AppBar sx={{ bgcolor: '#f9405e', padding: 1 }}>
       <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', justifyContent: 'space-evenly' }}>
         {/* Menu Icon for Drawer */}
         <IconButton sx={{ flexShrink: 1 }} color="inherit" onClick={toggleDrawer(true)}>

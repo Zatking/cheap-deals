@@ -9,45 +9,43 @@ import Box from '@mui/material/Box'
 import goku from '~/assets/goku.jpg'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 
-function MobileCard() {
+function ProductCard() {
   return (
-    <Card sx={{ marginTop: '62px' }}>
+    <Card sx={{ borderRadius: '10px' }}>
       <CardMedia component="img" alt="green iguana" height="140" image={goku} />
       <CardContent
         sx={{
-          padding: '5px' // Áp dụng padding cho lớp con .MuiCardContent-root
+          padding: '0 5px'
         }}
       >
         <Typography
           sx={{
             display: '-webkit-box',
-            WebkitLineClamp: 2, // Số dòng muốn hiển thị
+            WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            fontSize: '16px'
           }}
-          variant="h5"
           component="div"
         >
           iphone 12 pro max 16GB Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur
           adipisicing elit. Atque, tempora?
         </Typography>
       </CardContent>
-      <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex' }}>
-          <Typography variant="h5" component="div" color="error">
-            15.000.000đ
-          </Typography>
+      <CardActions sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0' }}>
+        <Box>
           <Typography
-            sx={{ textDecorationLine: 'line-through', ml: 0.5 }}
+            sx={{ textDecorationLine: 'line-through', fontSize: '16px', height: 'fit-content' }}
             variant="h6"
-            component="div"
             color="textDisabled"
-            un
           >
             12.000.000đ
           </Typography>
+          <Typography variant="h6" component="div" color="error">
+            15.000.000đ
+          </Typography>
         </Box>
-        <IconButton color="inherit">
+        <IconButton color="inherit" sx={{ alignSelf: 'end', paddingTop: 1 }} aria-label="add to shopping cart">
           <AddShoppingCartIcon />
         </IconButton>
       </CardActions>
@@ -55,4 +53,4 @@ function MobileCard() {
   )
 }
 
-export default MobileCard
+export default ProductCard
