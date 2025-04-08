@@ -7,6 +7,22 @@ import Box from '@mui/material/Box'
 import Fab from '@mui/material/Fab'
 import * as React from 'react'
 import ChatSupport from './ChatSupport/ChatSupport'
+import { keyframes } from '@emotion/react'
+
+const pulse = keyframes`
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+`
 
 export default function SupportServiceWrapper() {
   const [openActions, setOpenActions] = React.useState(false)
@@ -77,11 +93,26 @@ export default function SupportServiceWrapper() {
         sx={{
           backgroundColor: '#f9405e',
           color: 'white',
+          position: 'relative',
           '&:hover': {
             backgroundColor: '#d8344e'
           }
         }}
       >
+        <Box
+          sx={{
+            position: 'absolute',
+            width: 60,
+            height: 60,
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(249, 64, 94, 0.4)',
+            animation: `${pulse} 1.5s infinite`,
+            zIndex: -1
+          }}
+        />
         {openActions ? <CloseIcon /> : <SupportAgentIcon />}
       </Fab>
     </Box>

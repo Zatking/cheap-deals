@@ -6,13 +6,12 @@ import CardMedia from '@mui/material/CardMedia'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import goku from '~/assets/goku.jpg'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 
 function ProductCard() {
   return (
     <Card sx={{ borderRadius: '10px' }}>
-      <CardMedia component="img" alt="green iguana" height="140" image={goku} />
+      <CardMedia component="img" alt="green iguana" height="140" image="/asset/goku.jpg" />
       <CardContent
         sx={{
           padding: '0 5px'
