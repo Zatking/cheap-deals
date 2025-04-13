@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, TextField, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-
+import { useNavigate, NavLink } from 'react-router-dom'
 export default function Register() {
   // State variables for form fields and error messages
   const [email, setEmail] = useState('')
@@ -13,6 +13,7 @@ export default function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
   const [openSuccessDialog, setOpenSuccessDialog] = useState(false)
 
+  const navigate = useNavigate()
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -56,6 +57,9 @@ export default function Register() {
     // If all fields are valid, show success popup
     if (valid) {
       setOpenSuccessDialog(true)
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000)
     }
   }
 
@@ -151,7 +155,7 @@ export default function Register() {
         <Box>
           <Typography variant="body2" sx={{ marginTop: 1, textAlign: 'center' }}>
             Already have an account?{' '}
-            <Button variant="text" color="primary" onClick={() => alert('Redirect to Login')}>
+            <Button component={NavLink} to="/login" variant="text" color="primary">
               Log In
             </Button>
           </Typography>

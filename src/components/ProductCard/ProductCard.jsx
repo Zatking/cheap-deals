@@ -7,11 +7,17 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
+import { NavLink, useNavigate } from 'react-router-dom'
 
-function ProductCard() {
+function ProductCard({ product }) {
+  const navigate = useNavigate()
+  const handleCardClick = () => {
+    navigate('/productDetail', { state: { product } })
+  }
+
   return (
-    <Card sx={{ borderRadius: '10px' }}>
-      <CardMedia component="img" alt="green iguana" height="140" image="/asset/goku.jpg" />
+    <Card sx={{ p: 1, borderRadius: '10px' }} onClick={handleCardClick}>
+      <CardMedia component="img" alt="green iguana" height="140" image={product?.image} sx={{ objectFit: 'contain' }} />
       <CardContent
         sx={{
           padding: '0 5px'
@@ -23,30 +29,30 @@ function ProductCard() {
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            fontSize: '16px'
+            fontSize: '20px',
+            pt: 1
           }}
           component="div"
         >
-          iphone 12 pro max 16GB Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Atque, tempora?
+          {product?.title}
         </Typography>
       </CardContent>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0' }}>
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography
             sx={{ textDecorationLine: 'line-through', fontSize: '16px', height: 'fit-content' }}
             variant="h6"
             color="textDisabled"
           >
-            12.000.000đ
+            {product?.oldPrice}
           </Typography>
           <Typography variant="h6" component="div" color="error">
-            15.000.000đ
+            {product?.price}
           </Typography>
         </Box>
-        <IconButton color="inherit" sx={{ alignSelf: 'end', paddingTop: 1 }} aria-label="add to shopping cart">
+        {/* <IconButton color="inherit" sx={{ alignSelf: 'end', paddingTop: 1 }} aria-label="add to shopping cart">
           <AddShoppingCartIcon />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   )

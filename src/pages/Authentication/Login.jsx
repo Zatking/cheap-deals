@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Box, TextField, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-
+import { useNavigate, NavLink } from 'react-router-dom'
 export default function Login() {
   // State variables for form fields, error message, and success dialog visibility
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('') // Error message state
-  const [openSuccessDialog, setOpenSuccessDialog] = useState(false)
 
+  const navigate = useNavigate()
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -18,20 +18,17 @@ export default function Login() {
     setErrorMessage('')
 
     // Validate email and password together
-    if (email !== 'test@example.com' || password !== 'password123') {
+    if (email !== 'johnson@example.com' || password !== 'securepass123') {
       setErrorMessage('Email or password is incorrect.')
       valid = false
     }
 
     // If both fields are valid, show success popup
     if (valid) {
-      setOpenSuccessDialog(true)
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
     }
-  }
-
-  // Handle closing the success dialog
-  const handleCloseDialog = () => {
-    setOpenSuccessDialog(false)
   }
 
   return (
@@ -99,25 +96,12 @@ export default function Login() {
         <Box>
           <Typography variant="body2" sx={{ marginTop: 1, textAlign: 'center' }}>
             Don't have an account?{' '}
-            <Button variant="text" color="primary" onClick={() => alert('Redirect to Sign Up')}>
+            <Button component={NavLink} to="/register" variant="text" color="primary">
               Sign Up
             </Button>
           </Typography>
         </Box>
       </Box>
-
-      {/* Success Dialog (popup) */}
-      <Dialog open={openSuccessDialog} onClose={handleCloseDialog}>
-        <DialogTitle sx={{ color: '#4caf50' }}>Login Successful</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontWeight: '300' }}>Welcome back! You have successfully logged in.</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   )
 }

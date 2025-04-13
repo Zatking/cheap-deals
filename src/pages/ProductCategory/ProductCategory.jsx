@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import { Navigation } from 'swiper/modules'
@@ -7,10 +8,13 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import NavBar from '~/components/NavBar/NavBar'
 import ProductCard from '~/components/ProductCard/ProductCard'
 import SupportService from '~/components/SupportService/SupportService'
+function ProductCategory({ products }) {
+  const typeProduct = useLocation()
+  const [selectedBrand, setSelectedBrand] = useState(null)
+  const filteredProducts = selectedBrand ? products?.[selectedBrand] || [] : Object.values(products || {}).flat()
 
-function ProductCategory() {
   // State category (smartphone or tablet)
-  const [category, setCategory] = useState('Smart Phone') // 'smartphone' or 'tablet'
+  const category = typeProduct.pathname === '/smartphone' ? 'Smart Phone' : 'Tablet'
 
   // Fake data for smartphone and tablet brands with logos
   const smartphoneBrands = [
@@ -66,7 +70,9 @@ function ProductCategory() {
               <SwiperSlide key={index} style={{ width: 'fit-content' }}>
                 <Button
                   variant="outlined"
+                  onClick={() => setSelectedBrand(brand.name)} // Lưu brand đã chọn
                   sx={{
+                    borderColor: selectedBrand === brand.name ? 'black' : 'lightgrey',
                     borderRadius: 2,
                     display: 'flex',
                     alignItems: 'center',
@@ -99,14 +105,21 @@ function ProductCategory() {
           marginX: 'auto',
           display: 'flex',
           flexWrap: 'wrap',
-          gap: 2
+          justifyContent: 'space-between',
+          gap: 1
         }}
       >
-        {[...Array(7)].map((_, i) => (
-          <Box key={i} sx={{ width: '47%' }}>
-            <ProductCard />
+        {filteredProducts.length === 0 ? (
+          <Box sx={{ width: '100%', textAlign: 'center', padding: 3, color: 'gray' }}>
+            Sorry, no products available for this brand.
           </Box>
-        ))}
+        ) : (
+          filteredProducts.map((product, index) => (
+            <Box key={product.title + index} sx={{ width: '48%' }}>
+              <ProductCard product={product} />
+            </Box>
+          ))
+        )}
       </Box>
 
       {/* support service */}

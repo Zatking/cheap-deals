@@ -1,18 +1,21 @@
 import MenuIcon from '@mui/icons-material/Menu'
-import { AppBar, Grid, IconButton, Box, Typography } from '@mui/material'
-import Cart from './Cart/Cart'
+import { AppBar, Box, IconButton, Typography, Link } from '@mui/material'
 import Search from './Search/Search'
 import SideDrawer from './SideDrawer/SideDrawer'
 import { useState } from 'react'
-
+import { Badge } from '@mui/material'
+import { NavLink } from 'react-router-dom'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { mockData as data } from '~/Api/mock-data'
 export default function NavBar() {
   const [open, setOpen] = useState(false)
-  const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return
-    }
-    setOpen(open)
+  console.log('navbardata', data)
+
+  // Tạo toggleDrawer để mở/đóng Drawer
+  const toggleDrawer = (open) => () => {
+    setOpen(open) // Đóng/mở Drawer
   }
+
   return (
     <AppBar sx={{ bgcolor: '#f9405e', padding: 1 }}>
       <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', justifyContent: 'space-evenly' }}>
@@ -23,25 +26,33 @@ export default function NavBar() {
 
         {/* Logo */}
         <Typography
+          component={NavLink}
+          to="/"
           sx={{
             flexShrink: 0,
             lineHeight: 1,
-            textShadow: '2px 2px 5px rgba(0, 0, 0, 0.7)' // Áp dụng drop shadow
+            textShadow: '2px 2px 5px rgba(0, 0, 0, 0.7)',
+            color: 'white',
+            textDecoration: 'none'
           }}
           variant="h6"
           noWrap
-          component="div"
         >
           Cheap
           <br />
           Deals
         </Typography>
 
-        <Search sx={{ flexShrink: 1 }}></Search>
-        <Cart sx={{ flexShrink: 1 }}></Cart>
-      </Box>
-      {/* Cart Icon */}
+        <Search data={data.products} sx={{ flexShrink: 1 }}></Search>
 
+        <IconButton component={NavLink} to="/cart" color="inherit">
+          <Badge badgeContent={4} color="primary">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+      </Box>
+
+      {/* SideDrawer với onClose để đóng Drawer khi bấm ra ngoài */}
       <SideDrawer open={open} toggleDrawer={toggleDrawer}></SideDrawer>
     </AppBar>
   )

@@ -4,7 +4,10 @@ import CartItem from './CartItem/CartItem'
 import NavBar from '~/components/NavBar/NavBar'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
+import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 function CartPage() {
+  const navigate = useNavigate()
   return (
     <Box>
       <NavBar></NavBar>
@@ -24,6 +27,7 @@ function CartPage() {
       >
         {/* Icon Back bên trái */}
         <Button
+          onClick={() => navigate(-1)}
           sx={{
             color: 'black',
             minWidth: 'unset',
@@ -90,7 +94,7 @@ function CartPage() {
             <Typography sx={{ color: '#f9405e' }}> Total: 1244253đ</Typography>
           </Box>
           <Typography variant="body1"></Typography>
-          <Button variant="contained" sx={{ bgcolor: '#f9405e' }}>
+          <Button component={NavLink} to="/payment" variant="contained" sx={{ bgcolor: '#f9405e' }}>
             Buy now
           </Button>
         </Box>

@@ -6,51 +6,22 @@ import SupportService from '~/components/SupportService/SupportService'
 import { CheckCircle, LocalOffer, Payment, CardGiftcard, LocalPhone, Movie } from '@mui/icons-material'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import Button from '@mui/material/Button'
-
+import { useLocation } from 'react-router-dom'
 function ProductDetail() {
+  const location = useLocation()
+
+  const product = location.state?.product
+
   return (
     <Box>
       <NavBar></NavBar>
       <Box sx={{ width: '96%', marginTop: '68px', marginX: 'auto', marginBottom: 2.5 }}>
         <img
-          src="/assets/Product/Product/Mobile Phone/Iphone/Iphone 13 mini 128GB.webp"
+          src={product?.image}
           alt="iPhone"
           style={{ width: '100%', borderRadius: '15px', border: '1px solid #ccc' }}
         />
-        {/* Product detail */}
-        <Box sx={{ marginTop: 2, padding: 2, borderRadius: '15px', border: '1px solid #ccc' }}>
-          <Typography variant="h5" gutterBottom>
-            Product Detail
-          </Typography>
 
-          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
-            <CheckCircle sx={{ fontSize: 30, marginRight: 1 }} />
-            <Typography variant="body1" component="span">
-              Brand New 100% Genuine Product
-            </Typography>
-          </Box>
-
-          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
-            <Payment sx={{ fontSize: 30, marginRight: 1 }} />
-            <Typography variant="body1" component="span">
-              Price includes VAT 10%.
-            </Typography>
-          </Box>
-
-          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
-            <LocalOffer sx={{ fontSize: 30, marginRight: 1 }} />
-            <Typography variant="body1" component="span">
-              12-month warranty at authorized service centers.
-            </Typography>
-          </Box>
-
-          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
-            <CardGiftcard sx={{ fontSize: 30, marginRight: 1 }} />
-            <Typography variant="body1" component="span">
-              Free gift: Protective case and fast charger.
-            </Typography>
-          </Box>
-        </Box>
         {/*  Special offer */}
         <Box sx={{ color: '#f9405e', marginTop: 2, borderRadius: '15px', border: '1px solid #f9405e' }}>
           <Box
@@ -98,11 +69,45 @@ function ProductDetail() {
             </Box>
           </Box>
         </Box>
+        {/* Product detail */}
+        <Box sx={{ marginTop: 2, padding: 2, borderRadius: '15px', border: '1px solid #ccc' }}>
+          <Typography variant="h5" gutterBottom>
+            Product Detail
+          </Typography>
+
+          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            <CheckCircle sx={{ fontSize: 30, marginRight: 1 }} />
+            <Typography variant="body1" component="span">
+              Brand New 100% Genuine Product
+            </Typography>
+          </Box>
+
+          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            <Payment sx={{ fontSize: 30, marginRight: 1 }} />
+            <Typography variant="body1" component="span">
+              Price includes VAT 10%.
+            </Typography>
+          </Box>
+
+          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            <LocalOffer sx={{ fontSize: 30, marginRight: 1 }} />
+            <Typography variant="body1" component="span">
+              12-month warranty at authorized service centers.
+            </Typography>
+          </Box>
+
+          <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            <CardGiftcard sx={{ fontSize: 30, marginRight: 1 }} />
+            <Typography variant="body1" component="span">
+              Free gift: Protective case and fast charger.
+            </Typography>
+          </Box>
+        </Box>
 
         {/*  Buy and add cart */}
         <Box sx={{ marginTop: 2, marginBottom: 15, display: 'flex', justifyContent: 'space-between' }}>
           <Button sx={{ display: 'flex', flexDirection: 'column', bgcolor: '#f9405e', color: '#fff', flexGrow: 2 }}>
-            <Typography sx={{ fontSize: 14 }}>18,000,000 VND</Typography>
+            <Typography sx={{ fontSize: 18 }}>{product?.price}</Typography>
             <Typography variant="h5">Buy Now</Typography>
           </Button>
           <Button variant="outlined" sx={{ color: '#f9405e', borderColor: '#f9405e', flexGrow: 1, marginLeft: 2 }}>

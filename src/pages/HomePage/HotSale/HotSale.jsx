@@ -16,9 +16,9 @@ import HeaderHotSale from './HeaderHotSale/HeaderHotSale'
 import HotSaleCountDown from './HeaderHotSale/HotSaleCountDown'
 import { Typography } from '@mui/material'
 
-function HotSale() {
+function HotSale({ hotsale }) {
   const target = new Date()
-  target.setDate(target.getDate() + 30)
+  target.setDate(target.getDate() + hotsale.daySale)
 
   return (
     <Box sx={{ bgcolor: '#f9405e', padding: 1, borderRadius: 2, marginTop: '80px' }}>
@@ -35,21 +35,13 @@ function HotSale() {
           navigation={true}
           modules={[Autoplay, Pagination, Navigation]}
         >
-          <SwiperSlide>
-            <ProductCard></ProductCard>
-          </SwiperSlide>
-          <SwiperSlide>
-            <ProductCard></ProductCard>
-          </SwiperSlide>
-          <SwiperSlide>
-            <ProductCard></ProductCard>
-          </SwiperSlide>
-          <SwiperSlide>
-            <ProductCard></ProductCard>
-          </SwiperSlide>
-          <SwiperSlide>
-            <ProductCard></ProductCard>
-          </SwiperSlide>
+          {hotsale?.productSale?.map((product, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <ProductCard product={product} />
+              </SwiperSlide>
+            )
+          })}
         </Swiper>
       </Box>
     </Box>
