@@ -7,6 +7,9 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+
 const paymentMethods = [
   {
     id: 'visa',
@@ -30,30 +33,58 @@ const paymentMethods = [
     logo: '/assets/paymentMethod/americaExpress.png'
   }
 ]
-const products = [
-  {
-    image: '/assets/Product/Product/Mobile Phone/Iphone/Iphone 13 mini 128GB.webp',
-    title: 'Lorem ipsum dolor sit amet consectetur adipisicing',
-    price: '12424425đ'
-  },
-  {
-    image: '/assets/Product/Product/Mobile Phone/Iphone/Iphone 13 mini 128GB.webp',
-    title: 'Lorem ipsum dolor sit amet consectetur adipisicing',
-    price: '12424425đ'
-  }
-  // Add more products if needed
-]
+
 function PaymentPage() {
+  const [voucherCode, setVoucherCode] = useState('')
+  const [voucherApplied, setVoucherApplied] = useState(false)
+
   const [selected, setSelected] = useState('')
+
   const [recipientName, setRecipientName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('yourProfile')
+    if (savedProfile) {
+      const { name, email, phone, address } = JSON.parse(savedProfile)
+      setRecipientName(name || '')
+      setEmail(email || '')
+      setPhone(phone || '')
+      setAddress(address || '')
+    }
+  }, [])
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
   const [showAllCards, setShowAllCards] = useState(false)
 
+  const location = useLocation()
+  const rawData = location.state?.selectedItems || location.state?.product
+  const selectedItems = Array.isArray(rawData) ? rawData : [rawData]
+
   const navigate = useNavigate()
+  console.log('selectedItems', selectedItems)
+
+  const handleApplyVoucher = () => {
+    if (voucherCode.toLowerCase() === 'coursework80') {
+      setVoucherApplied(true)
+    } else {
+      setVoucherApplied(false)
+    }
+  }
+  const selectedCartItems = selectedItems
+
+  const quantityTotal = selectedCartItems.reduce((sum, item) => sum + item.quantity, 0) || 1
+
+  const originalTotalPrice =
+    selectedCartItems.reduce((total, item) => {
+      const numericPrice = parseFloat(item.price.replace('£', '').replace(',', ''))
+      return total + numericPrice * item.quantity
+    }, 0) || selectedItems[0].price
+
+  const discountedPrice = voucherApplied ? originalTotalPrice * 0.85 : originalTotalPrice
+
   const handleOrder = () => {
     if (!selected) {
       setModalMessage('Please select a payment method.')
@@ -69,20 +100,16 @@ function PaymentPage() {
     // Order success message
     setModalMessage('Order placed successfully!')
     setModalOpen(true)
-
     setTimeout(() => {
+      // Navigate to the home page after 2 seconds
+
       navigate('/')
     }, 2000)
-    // Reset form (optional)
-    // setSelected('')
-    // setRecipientName('')
-    // setEmail('')
-    // setPhone('')
-    // setAddress('')
   }
 
   return (
     <Box sx={{ bgcolor: '#f8f8f8', pb: 10 }}>
+      {console.log('render2')}
       <NavBar></NavBar>
       {/* navigation */}
       <Box
@@ -100,7 +127,7 @@ function PaymentPage() {
         }}
       >
         <Button
-          onClick={() => navigate(-1)} // Quay lại trang trước đó
+          onClick={() => navigate(-1)}
           sx={{
             color: 'black',
             minWidth: 'unset',
@@ -124,16 +151,16 @@ function PaymentPage() {
       </Box>
       {/* product */}
       <Box sx={{ width: '96%', marginX: 'auto', bgcolor: 'white', borderRadius: 2, transition: '0.3s' }}>
-        {/* Hiển thị các sản phẩm */}
-        {products.slice(0, showAllCards ? products.length : 1).map((product, index) => (
+        {/* Hiển thị các sản phẩm được chọn */}
+        {selectedItems.slice(0, showAllCards ? selectedItems.length : 1).map((product, index) => (
           <Box key={index} sx={{ p: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'start' }}>
               <CardMedia
                 component="img"
                 image={product.image}
                 sx={{
-                  width: '20%',
-                  height: '20%',
+                  width: '15%',
+                  height: '15%',
                   objectFit: 'cover',
                   borderRadius: 2
                 }}
@@ -148,15 +175,18 @@ function PaymentPage() {
                   <Typography variant="body2" color="warning" sx={{ mt: 1 }}>
                     Price: {product.price}
                   </Typography>
+                  <Typography variant="body2" color="warning" sx={{ mt: 1 }}>
+                    x{product.quantity || 1}
+                  </Typography>
                 </Box>
               </Box>
             </Box>
 
-            {index < products.length - 1 && <Divider sx={{ bgcolor: '#F8F8F8' }} />}
+            {index < selectedItems.length - 1 && <Divider sx={{ bgcolor: '#F8F8F8' }} />}
           </Box>
         ))}
 
-        {products.length > 1 && (
+        {selectedItems.length > 1 && (
           <Box sx={{ textAlign: 'center' }}>
             <IconButton
               onClick={() => setShowAllCards(!showAllCards)}
@@ -170,6 +200,7 @@ function PaymentPage() {
           </Box>
         )}
       </Box>
+
       {/* voucher */}
       <Box
         sx={{
@@ -183,21 +214,33 @@ function PaymentPage() {
           boxSizing: 'border-box'
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <TextField size="small" placeholder="Enter voucher code" />
-          <Button variant="contained" sx={{ bgcolor: '#f9405e' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <TextField
+            size="small"
+            placeholder="Enter voucher code"
+            value={voucherCode}
+            onChange={(e) => setVoucherCode(e.target.value)}
+          />
+          <Button variant="contained" sx={{ bgcolor: '#f9405e' }} onClick={handleApplyVoucher}>
             Apply
           </Button>
         </Box>
 
+        {voucherApplied && <Typography sx={{ color: 'green', mb: 1 }}>Successfully applied - 15% off</Typography>}
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
           <Typography>Product Quantity</Typography>
-          <Typography>3</Typography>
+          <Typography>{quantityTotal}</Typography>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
           <Typography>Price</Typography>
-          <Typography color="error">1.200.000 đ</Typography>
+          <Typography color="error">
+            {originalTotalPrice.toLocaleString('en-UK', {
+              style: 'currency',
+              currency: 'GBP'
+            })}
+          </Typography>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -205,6 +248,7 @@ function PaymentPage() {
           <Typography sx={{ fontWeight: 500 }}>FREE</Typography>
         </Box>
       </Box>
+
       {/* payment method */}
       <Box
         sx={{
@@ -333,7 +377,13 @@ function PaymentPage() {
             p: 2
           }}
         >
-          <Typography sx={{ color: '#f9405e' }}>Total Price: 1244253đ</Typography>
+          <Typography variant="h6" sx={{ color: '#f9405e' }}>
+            Total Price:{' '}
+            {discountedPrice.toLocaleString('en-UK', {
+              style: 'currency',
+              currency: 'GBP'
+            })}{' '}
+          </Typography>
           <Button variant="contained" sx={{ bgcolor: '#f9405e' }} onClick={handleOrder}>
             Order
           </Button>
@@ -361,7 +411,7 @@ function PaymentPage() {
             Notification
           </Typography>
           <Typography mb={2}>{modalMessage}</Typography>
-          <Button sx={{ bgcolor: '#f9405e ' }} variant="contained" onClick={() => setModalOpen(false)}>
+          <Button color="success" variant="contained" onClick={() => setModalOpen(false)}>
             OK
           </Button>
         </Box>

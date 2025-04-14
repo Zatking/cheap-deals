@@ -4,11 +4,9 @@ import { useNavigate, NavLink } from 'react-router-dom'
 export default function Register() {
   // State variables for form fields and error messages
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [emailError, setEmailError] = useState('')
-  const [phoneError, setPhoneError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
   const [openSuccessDialog, setOpenSuccessDialog] = useState(false)
@@ -29,15 +27,6 @@ export default function Register() {
       setEmailError('')
     }
 
-    // Validate phone number (only digits allowed)
-    const phoneRegex = /^[0-9]+$/
-    if (!phoneRegex.test(phone)) {
-      setPhoneError('Phone number must contain only numbers.')
-      valid = false
-    } else {
-      setPhoneError('')
-    }
-
     // Validate password length (must be at least 8 characters)
     if (password.length < 8) {
       setPasswordError('Password must be at least 8 characters long.')
@@ -56,7 +45,17 @@ export default function Register() {
 
     // If all fields are valid, show success popup
     if (valid) {
+      // Save user data to localStorage
+      const userData = {
+        email,
+        password
+      }
+      localStorage.setItem('user', JSON.stringify(userData))
+
+      // Show success dialog
       setOpenSuccessDialog(true)
+
+      // Redirect to login after delay
       setTimeout(() => {
         navigate('/login')
       }, 2000)
@@ -106,18 +105,6 @@ export default function Register() {
           sx={{ marginBottom: 2 }}
           error={!!emailError}
           helperText={emailError}
-        />
-
-        {/* Phone number input field */}
-        <TextField
-          label="Phone Number"
-          variant="outlined"
-          fullWidth
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          sx={{ marginBottom: 2 }}
-          error={!!phoneError}
-          helperText={phoneError}
         />
 
         {/* Password input field */}

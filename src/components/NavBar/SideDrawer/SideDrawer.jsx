@@ -11,7 +11,12 @@ function SideDrawer({ open, toggleDrawer }) {
     <Box sx={{ width: 250 }} role="presentation">
       <List>
         <ListItem button="true">
-          <ListItemText primary="Profile" />
+          <ListItemText
+            component={NavLink}
+            to="/profile"
+            sx={{ textDecoration: 'none', color: 'black' }}
+            primary="Profile"
+          />
         </ListItem>
 
         <ListItem button="true" onClick={() => setOpenCategory(!openCategory)}>
@@ -21,10 +26,20 @@ function SideDrawer({ open, toggleDrawer }) {
 
         <Collapse in={openCategory} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button="true" sx={{ pl: 4 }}>
+            <ListItem
+              sx={{ textDecoration: 'none', color: 'black', pl: 3 }}
+              component={NavLink}
+              to="/smartphone"
+              button="true"
+            >
               <ListItemText primary="• Smart Phone" />
             </ListItem>
-            <ListItem button="true" sx={{ pl: 4 }}>
+            <ListItem
+              sx={{ textDecoration: 'none', color: 'black', pl: 3 }}
+              component={NavLink}
+              to="/tablet"
+              button="true"
+            >
               <ListItemText primary="• Tablet" />
             </ListItem>
           </List>

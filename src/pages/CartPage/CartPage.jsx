@@ -6,12 +6,64 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 function CartPage() {
+  const [cartItems, setCartItems] = useState([])
+  const [selectedItems, setSelectedItems] = useState([])
+
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || []
+    setCartItems(storedCart)
+  }, [])
+
+  const handleQuantityChange = (index, newQuantity) => {
+    const updatedItems = [...cartItems]
+    updatedItems[index].quantity = newQuantity
+    setCartItems(updatedItems)
+    localStorage.setItem('cart', JSON.stringify(updatedItems))
+  }
+
+  const handleDelete = (index) => {
+    const updatedItems = [...cartItems]
+    updatedItems.splice(index, 1)
+    setCartItems(updatedItems)
+    localStorage.setItem('cart', JSON.stringify(updatedItems))
+
+    // Xóa khỏi danh sách selected nếu đã chọn
+    setSelectedItems((prev) => prev.filter((id) => id !== cartItems[index].id))
+  }
+
+  const handleSelectItem = (product) => {
+    const isSelected = selectedItems.some((item) => item.title === product.title)
+    if (isSelected) {
+      setSelectedItems((prev) => prev.filter((item) => item.title !== product.title))
+    } else {
+      setSelectedItems((prev) => [...prev, product])
+    }
+  }
+
+  const handleSelectAll = () => {
+    if (selectedItems.length === cartItems.length) {
+      setSelectedItems([])
+    } else {
+      setSelectedItems(cartItems) // ✅ lưu cả object
+    }
+  }
+
+  const totalPrice = cartItems.reduce((total, item) => {
+    const isSelected = selectedItems.some((selected) => selected.title === item.title)
+    if (isSelected) {
+      const numericPrice = parseFloat(item.price.replace('£', '').replace(',', ''))
+      return total + numericPrice * item.quantity
+    }
+    return total
+  }, 0)
+
   const navigate = useNavigate()
   return (
     <Box>
       <NavBar></NavBar>
-
+      {/* navigator */}
       <Box
         sx={{
           position: 'relative',
@@ -19,7 +71,7 @@ function CartPage() {
           marginX: 'auto',
           marginBottom: 2,
           bgcolor: '#f8f8f8',
-          height: 48, // chiều cao cố định
+          height: 48,
           display: 'flex',
           alignItems: 'center',
           px: 2
@@ -52,13 +104,23 @@ function CartPage() {
       </Box>
 
       <Box sx={{ width: '92%', marginX: 'auto', paddingBottom: 12 }}>
-        <CartItem></CartItem>
-        <CartItem></CartItem>
-        <CartItem></CartItem>
-        <CartItem></CartItem>
-        <CartItem></CartItem>
-        <CartItem></CartItem>
+        {cartItems.length === 0 ? (
+          <h3 style={{ textAlign: 'center', marginTop: 50 }}>The cart is empty</h3>
+        ) : (
+          cartItems.map((item, index) => (
+            <CartItem
+              key={item.id}
+              product={item}
+              onQuantityChange={(newQuantity) => handleQuantityChange(index, newQuantity)}
+              onDelete={() => handleDelete(index)}
+              onSelect={() => handleSelectItem(item)}
+              selected={selectedItems.some((selected) => selected.title === item.title)} // ✅
+            />
+          ))
+        )}
       </Box>
+
+      {/* buy now */}
       <Box
         sx={{
           bgcolor: 'white',
@@ -73,28 +135,32 @@ function CartPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            boxShadow: '0 -1px 2px  rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 -1px 2px rgba(0, 0, 0, 0.1)',
             p: 2
           }}
         >
           <Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Checkbox
-                sx={{
-                  p: 0
-                }}
-              ></Checkbox>
+                sx={{ p: 0 }}
+                checked={selectedItems.length === cartItems.length && cartItems.length > 0}
+                onChange={handleSelectAll}
+              />
               <Typography>Select All</Typography>
             </Box>
-            <Typography sx={{ color: '#f9405e' }}> Total: 1244253đ</Typography>
+            <Typography sx={{ color: '#f9405e' }}>
+              Total: £{totalPrice.toLocaleString('en-UK', { minimumFractionDigits: 2 })}
+            </Typography>
           </Box>
-          <Typography variant="body1"></Typography>
-          <Button component={NavLink} to="/payment" variant="contained" sx={{ bgcolor: '#f9405e' }}>
+
+          <Button
+            component={NavLink}
+            to="/payment"
+            state={{ selectedItems }}
+            variant="contained"
+            sx={{ bgcolor: '#f9405e' }}
+            disabled={selectedItems.length === 0}
+          >
             Buy now
           </Button>
         </Box>

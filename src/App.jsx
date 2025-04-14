@@ -8,6 +8,7 @@ import PaymentPage from './pages/CartPage/PaymentPage/PaymentPage'
 import { Routes, Route } from 'react-router-dom'
 import { mockData } from '~/Api/mock-data'
 import Navbar from './components/NavBar/NavBar'
+import Profile from './pages/Profile/Profile'
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
         <Route path="/productDetail" element={<ProductDetail />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* <Route path="/product/:id" element={<ProductDetail />} /> */}
       </Routes>

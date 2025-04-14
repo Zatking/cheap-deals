@@ -7,11 +7,18 @@ import { CheckCircle, LocalOffer, Payment, CardGiftcard, LocalPhone, Movie } fro
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import Button from '@mui/material/Button'
 import { useLocation } from 'react-router-dom'
+import addToCart from '~/utils/addToCart'
+import { useNavigate } from 'react-router-dom'
 function ProductDetail() {
+  const navigate = useNavigate()
+
   const location = useLocation()
-
   const product = location.state?.product
-
+  const existingCart = JSON.parse(localStorage.getItem('cart'))
+  console.log('existingCheapDealCart', existingCart)
+  const handleBuyNow = () => {
+    navigate('/payment', { state: { product } })
+  }
   return (
     <Box>
       <NavBar></NavBar>
@@ -108,9 +115,15 @@ function ProductDetail() {
         <Box sx={{ marginTop: 2, marginBottom: 15, display: 'flex', justifyContent: 'space-between' }}>
           <Button sx={{ display: 'flex', flexDirection: 'column', bgcolor: '#f9405e', color: '#fff', flexGrow: 2 }}>
             <Typography sx={{ fontSize: 18 }}>{product?.price}</Typography>
-            <Typography variant="h5">Buy Now</Typography>
+            <Typography variant="h5" onClick={handleBuyNow}>
+              Buy Now
+            </Typography>
           </Button>
-          <Button variant="outlined" sx={{ color: '#f9405e', borderColor: '#f9405e', flexGrow: 1, marginLeft: 2 }}>
+          <Button
+            onClick={() => addToCart(product)}
+            variant="outlined"
+            sx={{ color: '#f9405e', borderColor: '#f9405e', flexGrow: 1, marginLeft: 2 }}
+          >
             <AddShoppingCartIcon></AddShoppingCartIcon>
           </Button>
         </Box>

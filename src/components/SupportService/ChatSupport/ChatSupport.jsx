@@ -13,12 +13,36 @@ function ChatSupport({ onClose }) {
   }, [])
 
   const handleSend = () => {
-    if (!inputValue.trim()) return
-    setMessages((prev) => [...prev, { from: 'user', text: inputValue }])
+    const trimmed = inputValue.trim()
+    if (!trimmed) return
+
+    setMessages((prev) => [...prev, { from: 'user', text: trimmed }])
     setInputValue('')
     inputRef.current?.focus()
-  }
 
+    setTimeout(() => {
+      // Simple fixed replies based on keywords
+      let reply = 'Thank you for reaching out to DealCheap!'
+
+      if (trimmed.toLowerCase().includes('price')) {
+        reply = "We have many products on sale up to 50% off. Is there something you're looking for?"
+      } else if (trimmed.toLowerCase().includes('iphone')) {
+        reply = 'The iPhone 13 is currently on sale for £949. Would you like to place an order?'
+      } else if (trimmed.toLowerCase().includes('in stock')) {
+        reply = 'Yes, the product you asked about is currently in stock. Need help placing an order?'
+      } else if (trimmed.toLowerCase().includes('delivery')) {
+        reply = 'We offer nationwide delivery within 2-4 working days.'
+      } else if (trimmed.toLowerCase().includes('bye')) {
+        reply = 'Thank you. Hope to see you again soon!'
+      } else if (trimmed.toLowerCase().includes('thanks') || trimmed.toLowerCase().includes('tks')) {
+        reply = 'your welcome!'
+      } else {
+        reply = 'Can I help you with products, prices, or delivery?'
+      }
+
+      setMessages((prev) => [...prev, { from: 'bot', text: reply }])
+    }, 800)
+  }
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault()

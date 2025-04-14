@@ -9,11 +9,11 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { mockData as data } from '~/Api/mock-data'
 export default function NavBar() {
   const [open, setOpen] = useState(false)
-  console.log('navbardata', data)
 
-  // Tạo toggleDrawer để mở/đóng Drawer
+  const itemQuantity = JSON.parse(localStorage.getItem('cart')).length
+
   const toggleDrawer = (open) => () => {
-    setOpen(open) // Đóng/mở Drawer
+    setOpen(open)
   }
 
   return (
@@ -46,7 +46,7 @@ export default function NavBar() {
         <Search data={data.products} sx={{ flexShrink: 1 }}></Search>
 
         <IconButton component={NavLink} to="/cart" color="inherit">
-          <Badge badgeContent={4} color="primary">
+          <Badge badgeContent={itemQuantity} color="primary">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>

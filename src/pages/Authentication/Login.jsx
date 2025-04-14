@@ -12,19 +12,18 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    let valid = true
-
     // Reset error message
     setErrorMessage('')
 
-    // Validate email and password together
-    if (email !== 'johnson@example.com' || password !== 'securepass123') {
-      setErrorMessage('Email or password is incorrect.')
-      valid = false
-    }
+    // Lấy dữ liệu đã lưu trong localStorage
+    const savedUser = JSON.parse(localStorage.getItem('user'))
+    console.log('savedUser', savedUser)
 
-    // If both fields are valid, show success popup
-    if (valid) {
+    // Kiểm tra nếu không có user hoặc sai thông tin
+    if (!savedUser || email !== savedUser.email || password !== savedUser.password) {
+      setErrorMessage('Email or password is incorrect.')
+    } else {
+      // Nếu đúng thì chuyển hướng
       setTimeout(() => {
         navigate('/')
       }, 2000)
