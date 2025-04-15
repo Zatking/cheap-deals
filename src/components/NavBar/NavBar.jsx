@@ -11,7 +11,7 @@ import { mockData as data } from '../../mock-data'
 export default function NavBar() {
   const [open, setOpen] = useState(false)
 
-  const itemQuantity = JSON.parse(localStorage.getItem('cart'))?.length
+  const itemQuantity = JSON.parse(localStorage.getItem('cart')).length
 
   const toggleDrawer = (open) => () => {
     setOpen(open)
