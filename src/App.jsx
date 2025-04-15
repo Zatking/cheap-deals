@@ -6,7 +6,7 @@ import Register from './pages/Authentication/Register'
 import CartPage from './pages/CartPage/CartPage'
 import PaymentPage from './pages/CartPage/PaymentPage/PaymentPage'
 import { Routes, Route } from 'react-router-dom'
-import { mockData } from '~/Api/mock-data'
+import { mockData } from '../public/mock-data'
 import Navbar from './components/NavBar/NavBar'
 import Profile from './pages/Profile/Profile'
 function App() {

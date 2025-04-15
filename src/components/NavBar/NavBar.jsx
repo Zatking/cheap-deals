@@ -6,7 +6,8 @@ import { useState } from 'react'
 import { Badge } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { mockData as data } from '~/Api/mock-data'
+import { mockData as data } from '../../../public/mock-data'
+
 export default function NavBar() {
   const [open, setOpen] = useState(false)
 
