@@ -9,6 +9,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { mockData as data } from '../../mock-data'
 
 export default function NavBar() {
+  // nothing  new
   const [open, setOpen] = useState(false)
 
   const itemQuantity = JSON.parse(localStorage.getItem('cart'))?.length
